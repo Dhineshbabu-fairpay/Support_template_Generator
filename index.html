@@ -1,0 +1,2080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turo Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Navigation Styles */
+        .main-nav {
+            background: linear-gradient(135deg, #3a86ff, #2563eb);
+            padding: 15px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-title {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Page Container */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Header Styles */
+        .page-header {
+            background: linear-gradient(135deg, #3a86ff, #2563eb);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        /* Template Manager Styles */
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+        
+        .search-container {
+            flex: 1;
+            position: relative;
+            max-width: 600px;
+        }
+        
+        #searchInput {
+            width: 100%;
+            padding: 16px 45px 16px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        #searchInput:focus {
+            outline: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        .add-template-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+            white-space: nowrap;
+        }
+        
+        .add-template-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        .template-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border-left: 5px solid #3a86ff;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+        
+        .template-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #3a86ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .template-content {
+            font-size: 0.95rem;
+            color: #555;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+        
+        .template-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6c757d;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            color: #3a86ff;
+        }
+        
+        .delete-btn:hover {
+            color: #dc3545;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f4f8;
+        }
+        
+        .modal-title {
+            font-size: 1.6rem;
+            color: #3a86ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #6c757d;
+            transition: color 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: #3a86ff;
+        }
+        
+        .template-full {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3a86ff;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(135deg, #3a86ff, #2563eb);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
+        }
+        
+        .customization-form {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f0f4f8;
+            border-radius: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #3a86ff;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3a86ff;
+            box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1100;
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.2);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            display: none;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ced4da;
+        }
+        
+        /* Renters Dashboard Styles */
+        .upload-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .file-input {
+            margin: 15px 0;
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            border: 2px dashed #3498db;
+            border-radius: 5px;
+            background-color: #f8fafc;
+        }
+        
+        .filters {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e1e5eb;
+        }
+        
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        th:hover {
+            background-color: #2980b9;
+        }
+        
+        th::after {
+            content: '';
+            display: inline-block;
+            margin-left: 5px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #fff;
+            opacity: 0.5;
+        }
+        
+        th.asc::after {
+            border-top: none;
+            border-bottom: 5px solid #fff;
+        }
+        
+        th.desc::after {
+            border-top: 5px solid #fff;
+            border-bottom: none;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        
+        tr:hover {
+            background-color: #e8f4fc;
+        }
+        
+        .positive-due {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .negative-due {
+            color: #2ecc71;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 30px;
+            color: #7f8c8d;
+        }
+        
+        /* Notes section styles */
+        .notes-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .notes-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .voice-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        #voiceStatus {
+            margin-left: 10px;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        
+        .recording {
+            color: #e74c3c !important;
+            font-weight: bold;
+        }
+        
+        #customerNotes {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .notes-history {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        
+        .note-entry {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        .note-date {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 14px;
+        }
+        
+        .btn-success {
+            background-color: #27ae60;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Payment Manager Styles */
+        .payment-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .payment-section h2 {
+            color: #3a86ff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .toggle-container label {
+            margin-left: 8px;
+        }
+        
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        #output {
+            height: 150px;
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-controls {
+                flex-direction: column;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .search-container {
+                max-width: 100%;
+            }
+            
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .main-nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <div class="nav-title">
+                <i class="fas fa-car"></i>
+                <span>Turo Management System</span>
+            </div>
+            <div class="nav-links">
+                <button class="nav-btn active" data-page="template-manager">
+                    <i class="fas fa-comment-dots"></i> Templates
+                </button>
+                <button class="nav-btn" data-page="renters-dashboard">
+                    <i class="fas fa-chart-line"></i> Renters
+                </button>
+                <button class="nav-btn" data-page="payment-manager">
+                    <i class="fas fa-money-bill-wave"></i> Payments
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Template Manager Page -->
+        <div id="template-manager" class="page active">
+            <header class="page-header">
+                <h1><i class="fas fa-comment-dots"></i> Turo Message Template Manager</h1>
+                <p>Search, manage, and copy templates for customer communication</p>
+            </header>
+            
+            <div class="header-controls">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search templates...">
+                    <div class="search-icon"><i class="fas fa-search"></i></div>
+                </div>
+                <button class="add-template-btn" id="addTemplateBtn">
+                    <i class="fas fa-plus"></i> Add New Template
+                </button>
+            </div>
+            
+            <div class="templates-grid" id="templatesContainer">
+                <!-- Templates will be dynamically inserted here -->
+            </div>
+            
+            <div class="empty-state" id="emptyState">
+                <i class="fas fa-comment-slash"></i>
+                <h3>No templates found</h3>
+                <p>Add your first template by clicking the "Add New Template" button</p>
+            </div>
+        </div>
+        
+        <!-- Renters Dashboard Page -->
+        <div id="renters-dashboard" class="page">
+            <header class="page-header">
+                <h1><i class="fas fa-chart-line"></i> Active Renters Dashboard</h1>
+                <p>View and manage active rental information</p>
+            </header>
+            
+            <section class="upload-section">
+                <h2>Upload Excel File</h2>
+                <input type="file" id="fileInput" class="file-input" accept=".xlsx, .xls">
+                <button id="uploadBtn">Process File</button>
+            </section>
+            
+            <section class="filters">
+                <div class="filter-item">
+                    <label for="hideNegative">Hide Negative Values:</label>
+                    <input type="checkbox" id="hideNegative" checked>
+                </div>
+                
+                <div class="filter-item">
+                    <label for="sortOrder">Sort By:</label>
+                    <select id="sortOrder">
+                        <option value="asc">Due Today (Low to High)</option>
+                        <option value="desc">Due Today (High to Low)</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label for="searchInputRenters">Search:</label>
+                    <input type="text" id="searchInputRenters" placeholder="Filter results...">
+                </div>
+            </section>
+            
+            <section class="table-container">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th data-sort="year">Year</th>
+                            <th data-sort="make">Make</th>
+                            <th data-sort="model">Model</th>
+                            <th data-sort="plate">Plate Number</th>
+                            <th data-sort="insurance">Insurance Company</th>
+                            <th data-sort="expiry">Insurance Expiry</th>
+                            <th data-sort="renter">Renter Name</th>
+                            <th data-sort="due">Due Today</th>
+                            <th data-sort="uber">Uber Earnings</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr>
+                            <td colspan="10" class="no-data">Upload an Excel file to see data</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <section class="notes-section" id="notesSection" style="display: none;">
+                <div class="notes-header">
+                    <h2>Notes for <span id="currentRenterName"></span></h2>
+                    <button id="closeNotes" class="btn-danger">Close</button>
+                </div>
+                
+                <div class="notes-controls">
+                    <input type="text" id="noteTitle" placeholder="Note title" style="flex-grow: 1;">
+                    <button id="saveNote" class="btn-success">Save Note</button>
+                </div>
+                
+                <textarea id="customerNotes" placeholder="Add notes about this renter..."></textarea>
+                
+                <div class="voice-controls">
+                    <button id="startRecording" class="btn-sm">Start Voice Recording</button>
+                    <span id="voiceStatus">Ready</span>
+                </div>
+                
+                <div class="notes-history" id="notesHistory">
+                    <h3>Notes History</h3>
+                    <div class="no-data">No notes yet</div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Payment Manager Page -->
+        <div id="payment-manager" class="page">
+            <header class="page-header">
+                <h1><i class="fas fa-money-bill-wave"></i> Payment Manager</h1>
+                <p>Manage payment details and generate payment messages</p>
+            </header>
+            
+            <div class="payment-section">
+                <h2><i class="fas fa-credit-card"></i> Payment Methods</h2>
+                <input type="text" id="zelle" placeholder="Zelle Info">
+                <input type="text" id="venmoPersonal" placeholder="Venmo Personal">
+                <input type="text" id="venmoBusiness" placeholder="Venmo Business">
+                <input type="text" id="paypal" placeholder="PayPal">
+                <input type="text" id="cashapp" placeholder="Cash App">
+                <button id="savePayment">Save Payment Methods</button>
+            </div>
+            
+            <div class="payment-section">
+                <h2><i class="fas fa-calculator"></i> Earnings Calculator</h2>
+                <input type="number" id="previousOutstanding" placeholder="Previous Outstanding">
+                <input type="date" id="uberDate">
+                <input type="number" id="uberEarnings" placeholder="Uber Earnings">
+                
+                <div class="toggle-container">
+                    <input type="checkbox" id="toggleMiles">
+                    <label for="toggleMiles">Include Miles</label>
+                </div>
+                
+                <input type="date" id="milesDrivenDate">
+                <input type="text" id="milesDriven" placeholder="Miles Driven">
+                
+                <input type="date" id="dailyDate">
+                <input type="number" id="dailyRental" placeholder="Daily Rental">
+                
+                <div class="toggle-container">
+                    <input type="checkbox" id="toggleTolls">
+                    <label for="toggleTolls">Include Tolls</label>
+                </div>
+                
+                <input type="number" id="tolls" placeholder="Tolls">
+                
+                <div class="button-row">
+                    <button id="generateBtn">Generate Message</button>
+                    <button id="copyBtn">Copy to Clipboard</button>
+                </div>
+                
+                <textarea id="output" readonly></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals for Template Manager -->
+    <div class="modal" id="templateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-file-alt"></i> <span id="modalTitle">Template Title</span></h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="template-full" id="modalContent">
+                <!-- Template content will be inserted here -->
+            </div>
+            <div id="customizationSection"></div>
+            <button class="copy-btn" id="copyButton"><i class="fas fa-copy"></i> Copy Template</button>
+            <div class="stats">
+                <span id="charCount">0 characters</span>
+                <span id="lineCount">0 lines</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="editTemplateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-plus"></i> <span id="editModalTitle">Add New Template</span></h2>
+                <button class="close-btn" id="closeEditModal">&times;</button>
+            </div>
+            <form id="templateForm">
+                <input type="hidden" id="templateId">
+                <div class="form-group">
+                    <label for="templateTitle"><i class="fas fa-heading"></i> Template Title</label>
+                    <input type="text" id="templateTitle" placeholder="Enter template title" required>
+                </div>
+                <div class="form-group">
+                    <label for="templateContent"><i class="fas fa-align-left"></i> Template Content</label>
+                    <textarea id="templateContent" placeholder="Enter template content" required></textarea>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="needsLicenseCheck">
+                    <label for="needsLicenseCheck">Requires license verification</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="needsCustomization">
+                    <label for="needsCustomization">Requires customization (ZAM ZAM)</label>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="copy-btn"><i class="fas fa-save"></i> Save Template</button>
+                    <button type="button" class="copy-btn btn-secondary" id="cancelEdit">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="licenseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-id-card"></i> License Verification</h2>
+            </div>
+            <p>In license section shows "Awaiting License". Do you want to add the license reminder?</p>
+            <div class="btn-group">
+                <button class="copy-btn" id="licenseYes"><i class="fas fa-check"></i> Yes</button>
+                <button class="copy-btn btn-secondary" id="licenseNo"><i class="fas fa-times"></i> No</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="customizationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-cogs"></i> Customize Template</h2>
+            </div>
+            <div class="customization-form">
+                <div class="form-group">
+                    <label for="zipCode"><i class="fas fa-map-marker-alt"></i> Zip Code</label>
+                    <input type="text" id="zipCode" placeholder="Enter zip code">
+                </div>
+                <div class="form-group">
+                    <label for="pickupTime"><i class="fas fa-clock"></i> Pickup Time</label>
+                    <input type="text" id="pickupTime" placeholder="Enter pickup time">
+                </div>
+            </div>
+            <button class="copy-btn" id="applyCustomization"><i class="fas fa-check"></i> Apply and Copy</button>
+        </div>
+    </div>
+    
+    <div class="notification" id="copyNotification">
+        <i class="fas fa-check-circle"></i> Template copied to clipboard!
+    </div>
+
+    <!-- SheetJS library for Excel processing -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script>
+        // ===== PAGE NAVIGATION =====
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const pageId = this.getAttribute('data-page');
+                
+                // Update active button
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Show selected page
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.getElementById(pageId).classList.add('active');
+            });
+        });
+
+        // ===== TEMPLATE MANAGER FUNCTIONALITY =====
+        // Template data - will be loaded from localStorage or use default
+        let templates = [];
+        let editingTemplateId = null;
+
+        // Default templates
+        const defaultTemplates = [
+            {
+                id: '1',
+                title: "Discount details",
+                content: "The discount is automatically applied when you book the next reservation. When you are about to checkout you can see the cost breakdown with the additional discount. Let me know if you still face any issues getting the discount."
+            },
+            {
+                id: '2',
+                title: "How do I get the Keys",
+                content: "The keys are in the glovebox. Unlock using turo go or let me know I will remote unlock it."
+            },
+            {
+                id: '3',
+                title: "Pickup car rental DFW",
+                content: "We hope your rental experience with us has been thoroughly enjoyable!\n\nAs a reminder, your vehicle drop-off will be at the same location you picked up the car from. If you are unsure of the address please let us know.\n\nIf you picked up the car from turo parking lot in DFW please drop off the car at the same turo parking lot (it's next to remote south parking 2400 S Airfield Dr Euless, TX 75038. Once you reach the address continue driving ahead for a few feet till you find the turo parking lot).\n\nUpon arrival and parking, here's a succinct guide to ensure a smooth handoff:\n\nFor Non-Turo Go Users: After parking, make sure to collect all your belongings. Place the lockbox on the window with the lock facing outward, roll the windows up, and securely lock the car. Place the keys inside the lockbox and turn the knob to ensure it's locked. Confirm that the lockbox is securely locked. Capture a photo of the parking spot and send it to us.\n\nFuel Policy: Please refuel the car to the same level as it was at the start of your rental.\n\nLate Returns: If you anticipate a delay in your return, kindly extend your rental through the app to update your drop-off time accordingly. This will help you avoid any late fees.\n\nThank you for choosing us for your journey. We look forward to welcoming you back soon!"
+            },
+            {
+                id: '4',
+                title: "check out car rental ZAM ZAM",
+                content: "We hope your rental experience with us has been thoroughly enjoyable!\n\nAs a reminder, your vehicle drop-off will be at the 3901 West Northgate Drive, Irving, TX 75062. Upon arrival and parking, here's a succinct guide to ensure a smooth handoff:\n\nFor Non-Turo Go Users: After parking, make sure to collect all your belongings. Place the lockbox on the window with the lock facing outward, roll the windows up, and securely lock the car. Place the keys inside the lockbox and turn the knob to ensure it's locked. Confirm that the lockbox is securely locked. Capture a photo of the parking spot and send it to us.\n\nFuel Policy: Please refuel the car to the same level as it was at the start of your rental.\n\nLate Returns: If you anticipate a delay in your return, kindly extend your rental through the app to update your drop-off time accordingly. This will help you avoid any late fees.\n\nThank you for choosing us for your journey. We look forward to welcoming you back soon!"
+            },
+            {
+                id: '5',
+                title: "check in car rental houstan",
+                content: "Thank you for selecting our service for your travel needs! We're thrilled to be part of your journey and are committed to ensuring a seamless and enjoyable experience. Below, you'll find important information to help you prepare for your trip:\n\nPre-Trip Checklist\n- Document Upload: Please upload a photo of your driver's license and a selfie to Turo at least 24 hours before your trip begins. Instructions for this process were sent to your email by Turo. If you encounter any issues, refer to that email for guidance.\n\nArrival Information\n- Vehicle Readiness: We aim to have your vehicle ready 15 minutes before your scheduled pick-up time. However, we cannot guarantee availability before then, so please verify your pick-up time before arriving.\n\nVehicle Pickup Details\n-Location: Your vehicle will be available for pickup at 3390 FM 1960 Rd, Humble, TX 77338. This is the parking lot located directly behind La Cabana - Mexican Restaurant. We share the entrance with the restaurant, but our parking area is further down at the back of the lot.\n\nHere is the store manager number +1 (832) 779-0678 Please reach out to this number for any queries.\n\nProximity to Airport: We are conveniently located near George Bush Intercontinental Airport (IAH). Please note that due to Turo's updated policies, we are unable to offer pick-ups or drop-offs directly at the airport terminals. You will need to arrange a short ride (e.g., Uber or Lyft) from the airport to our location.\n\nAccess Instructions: Approximately 15 minutes before your scheduled pick-up time, we will send you a picture of the parking spot and the lockbox code to access the keys. If your rental uses Turo Go, you can ignore the lockbox code and access the car directly through the app.\n\nTolls\n- The vehicle is equipped with a toll sticker for your convenience. Any tolls incurred during your trip will be billed to you afterward.\n\nExtension Policy\n- If your plans change and you'd like to extend your trip, please let us know as soon as possible. If the vehicle is available, we'll be happy to reserve it exclusively for you, ensuring no other bookings take precedence. Your convenience is our priority!\n\nPolicies & FAQs\n- No Smoking: Smoking is strictly prohibited in the vehicle.\n- Additional Information: For details on drop-offs, refueling, tolls, and other frequently asked questions, please refer to our FAQ section.\n\nWe're truly grateful you've chosen to travel with us and look forward to providing you with an exceptional experience. Safe travels, and don't hesitate to reach out if you have any questions!",
+                needsLicenseCheck: true
+            },
+            {
+                id: '6',
+                title: "check in car rental ZAM ZAM",
+                content: "Thank you for selecting our service for your travel needs! We're thrilled to be part of your journey and are committed to ensuring a seamless and enjoyable experience.\n\nVehicle Pickup Details: The vehicle can be collected from 3901 West Northgate Drive, Irving, {zipcode}, which is conveniently located near DFW airport. Please note, due to Turo's updated policies, we're unable to offer pick-ups or drop-offs directly at DFW airport terminals. You will need to arrange a short Uber ride from the airport to our location. To access the car, we will provide you with a picture of the parking spot and the code to the lockbox 15 minutes prior to your pickup time {time}. If your rental uses Turo Go, you can ignore the lockbox code and access the car directly through the app.",
+                needsCustomization: true
+            }
+        ];
+
+        // DOM elements for Template Manager
+        const templatesContainer = document.getElementById('templatesContainer');
+        const searchInput = document.getElementById('searchInput');
+        const templateModal = document.getElementById('templateModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const closeModal = document.getElementById('closeModal');
+        const copyButton = document.getElementById('copyButton');
+        const licenseModal = document.getElementById('licenseModal');
+        const licenseYes = document.getElementById('licenseYes');
+        const licenseNo = document.getElementById('licenseNo');
+        const customizationModal = document.getElementById('customizationModal');
+        const applyCustomization = document.getElementById('applyCustomization');
+        const zipCodeInput = document.getElementById('zipCode');
+        const pickupTimeInput = document.getElementById('pickupTime');
+        const copyNotification = document.getElementById('copyNotification');
+        const customizationSection = document.getElementById('customizationSection');
+        const charCount = document.getElementById('charCount');
+        const lineCount = document.getElementById('lineCount');
+        const addTemplateBtn = document.getElementById('addTemplateBtn');
+        const editTemplateModal = document.getElementById('editTemplateModal');
+        const editModalTitle = document.getElementById('editModalTitle');
+        const closeEditModal = document.getElementById('closeEditModal');
+        const templateForm = document.getElementById('templateForm');
+        const templateIdInput = document.getElementById('templateId');
+        const templateTitleInput = document.getElementById('templateTitle');
+        const templateContentInput = document.getElementById('templateContent');
+        const needsLicenseCheckInput = document.getElementById('needsLicenseCheck');
+        const needsCustomizationInput = document.getElementById('needsCustomization');
+        const cancelEdit = document.getElementById('cancelEdit');
+        const emptyState = document.getElementById('emptyState');
+
+        // Current selected template
+        let currentTemplate = null;
+
+        // Initialize the Template Manager
+        function initTemplateManager() {
+            loadTemplates();
+            initTemplates();
+            setupTemplateEventListeners();
+        }
+
+        // Load templates from localStorage or use defaults
+        function loadTemplates() {
+            const savedTemplates = localStorage.getItem('turoTemplates');
+            if (savedTemplates) {
+                templates = JSON.parse(savedTemplates);
+            } else {
+                templates = defaultTemplates;
+                saveTemplates();
+            }
+        }
+
+        // Save templates to localStorage
+        function saveTemplates() {
+            localStorage.setItem('turoTemplates', JSON.stringify(templates));
+        }
+
+        // Initialize the page with templates
+        function initTemplates() {
+            templatesContainer.innerHTML = '';
+            
+            if (templates.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            templates.forEach(template => {
+                const card = document.createElement('div');
+                card.className = 'template-card';
+                card.dataset.id = template.id;
+                card.innerHTML = `
+                    <h3 class="template-title"><i class="fas fa-comment-dots"></i> ${template.title}</h3>
+                    <div class="template-content">${template.content}</div>
+                    <div class="template-actions">
+                        <button class="action-btn edit-btn" title="Edit template"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete-btn" title="Delete template"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('.action-btn')) {
+                        openTemplateModal(template);
+                    }
+                });
+                
+                const editBtn = card.querySelector('.edit-btn');
+                editBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openEditTemplateModal(template);
+                });
+                
+                const deleteBtn = card.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteTemplate(template.id);
+                });
+                
+                templatesContainer.appendChild(card);
+            });
+        }
+
+        // Open template modal
+        function openTemplateModal(template) {
+            currentTemplate = template;
+            modalTitle.textContent = template.title;
+            modalContent.textContent = template.content;
+            
+            // Update stats
+            updateStats(template.content);
+            
+            // Show customization section if needed
+            if (template.needsCustomization) {
+                customizationSection.innerHTML = `
+                    <div class="customization-form">
+                        <div class="form-group">
+                            <label for="customZipCode"><i class="fas fa-map-marker-alt"></i> Zip Code</label>
+                            <input type="text" id="customZipCode" placeholder="Enter zip code">
+                        </div>
+                        <div class="form-group">
+                            <label for="customPickupTime"><i class="fas fa-clock"></i> Pickup Time</label>
+                            <input type="text" id="customPickupTime" placeholder="Enter pickup time">
+                        </div>
+                    </div>
+                `;
+            } else {
+                customizationSection.innerHTML = '';
+            }
+            
+            templateModal.style.display = 'flex';
+        }
+
+        // Open edit template modal
+        function openEditTemplateModal(template = null) {
+            if (template) {
+                // Editing existing template
+                editingTemplateId = template.id;
+                templateIdInput.value = template.id;
+                templateTitleInput.value = template.title;
+                templateContentInput.value = template.content;
+                needsLicenseCheckInput.checked = template.needsLicenseCheck || false;
+                needsCustomizationInput.checked = template.needsCustomization || false;
+                editModalTitle.textContent = "Edit Template";
+            } else {
+                // Adding new template
+                editingTemplateId = null;
+                templateForm.reset();
+                editModalTitle.textContent = "Add New Template";
+            }
+            
+            editTemplateModal.style.display = 'flex';
+        }
+
+        // Save template (from form)
+        function saveTemplate(e) {
+            e.preventDefault();
+            
+            const title = templateTitleInput.value.trim();
+            const content = templateContentInput.value.trim();
+            const needsLicenseCheck = needsLicenseCheckInput.checked;
+            const needsCustomization = needsCustomizationInput.checked;
+            
+            if (!title || !content) {
+                showNotification('Please fill in both title and content', true);
+                return;
+            }
+            
+            if (editingTemplateId) {
+                // Update existing template
+                const index = templates.findIndex(t => t.id === editingTemplateId);
+                if (index !== -1) {
+                    templates[index] = {
+                        ...templates[index],
+                        title,
+                        content,
+                        needsLicenseCheck,
+                        needsCustomization
+                    };
+                }
+            } else {
+                // Add new template
+                const newTemplate = {
+                    id: Date.now().toString(),
+                    title,
+                    content,
+                    needsLicenseCheck,
+                    needsCustomization
+                };
+                templates.push(newTemplate);
+            }
+            
+            saveTemplates();
+            initTemplates();
+            closeModals();
+            showNotification(`Template ${editingTemplateId ? 'updated' : 'added'} successfully!`);
+        }
+
+        // Delete template
+        function deleteTemplate(id) {
+            if (confirm('Are you sure you want to delete this template?')) {
+                templates = templates.filter(t => t.id !== id);
+                saveTemplates();
+                initTemplates();
+                showNotification('Template deleted successfully!');
+            }
+        }
+
+        // Update character and line count
+        function updateStats(content) {
+            const chars = content.length;
+            const lines = content.split('\n').length;
+            
+            charCount.textContent = `${chars} characters`;
+            lineCount.textContent = `${lines} lines`;
+        }
+
+        // Close all modals
+        function closeModals() {
+            templateModal.style.display = 'none';
+            licenseModal.style.display = 'none';
+            customizationModal.style.display = 'none';
+            editTemplateModal.style.display = 'none';
+        }
+
+        // Copy text to clipboard with fallback method
+        function copyToClipboard(text) {
+            // Create a temporary textarea element
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.setAttribute('readonly', '');
+            textarea.style.position = 'absolute';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            
+            // Select and copy the text
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // For mobile devices
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showNotification('Template copied to clipboard!');
+                } else {
+                    showNotification('Failed to copy template. Please try again.', true);
+                }
+            } catch (err) {
+                showNotification('Error copying template. Please try again.', true);
+            }
+            
+            // Clean up
+            document.body.removeChild(textarea);
+        }
+
+        // Show notification
+        function showNotification(message, isError = false) {
+            copyNotification.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i> ${message}`;
+            copyNotification.classList.toggle('error', isError);
+            copyNotification.classList.add('show');
+            setTimeout(() => {
+                copyNotification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Setup event listeners for Template Manager
+        function setupTemplateEventListeners() {
+            // Search functionality
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                const filteredTemplates = templates.filter(template => 
+                    template.title.toLowerCase().includes(searchTerm) || 
+                    template.content.toLowerCase().includes(searchTerm)
+                );
+                
+                templatesContainer.innerHTML = '';
+                
+                if (filteredTemplates.length === 0) {
+                    emptyState.style.display = 'block';
+                    return;
+                }
+                
+                emptyState.style.display = 'none';
+                
+                filteredTemplates.forEach(template => {
+                    const card = document.createElement('div');
+                    card.className = 'template-card';
+                    card.dataset.id = template.id;
+                    card.innerHTML = `
+                        <h3 class="template-title"><i class="fas fa-comment-dots"></i> ${template.title}</h3>
+                        <div class="template-content">${template.content}</div>
+                        <div class="template-actions">
+                            <button class="action-btn edit-btn" title="Edit template"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete-btn" title="Delete template"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    
+                    card.addEventListener('click', (e) => {
+                        if (!e.target.closest('.action-btn')) {
+                            openTemplateModal(template);
+                        }
+                    });
+                    
+                    const editBtn = card.querySelector('.edit-btn');
+                    editBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        openEditTemplateModal(template);
+                    });
+                    
+                    const deleteBtn = card.querySelector('.delete-btn');
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        deleteTemplate(template.id);
+                    });
+                    
+                    templatesContainer.appendChild(card);
+                });
+            });
+            
+            // Close modals
+            closeModal.addEventListener('click', closeModals);
+            closeEditModal.addEventListener('click', closeModals);
+            cancelEdit.addEventListener('click', closeModals);
+            
+            // Copy template
+            copyButton.addEventListener('click', () => {
+                if (currentTemplate.needsLicenseCheck) {
+                    licenseModal.style.display = 'flex';
+                } else if (currentTemplate.needsCustomization) {
+                    const zipCode = document.getElementById('customZipCode')?.value;
+                    const pickupTime = document.getElementById('customPickupTime')?.value;
+                    
+                    if (!zipCode || !pickupTime) {
+                        showNotification('Please fill in both zip code and pickup time', true);
+                        return;
+                    }
+                    
+                    let customizedContent = currentTemplate.content
+                        .replace(/{zipcode}/g, zipCode)
+                        .replace(/{time}/g, pickupTime);
+                    
+                    copyToClipboard(customizedContent);
+                    closeModals();
+                } else {
+                    copyToClipboard(currentTemplate.content);
+                    closeModals();
+                }
+            });
+            
+            // License verification
+            licenseYes.addEventListener('click', () => {
+                const awaitingLicense = templates.find(t => t.title === 'Awaiting License');
+                if (awaitingLicense) {
+                    copyToClipboard(awaitingLicense.content + '\n\n' + currentTemplate.content);
+                } else {
+                    copyToClipboard(currentTemplate.content);
+                }
+                closeModals();
+            });
+            
+            licenseNo.addEventListener('click', () => {
+                copyToClipboard(currentTemplate.content);
+                closeModals();
+            });
+            
+            // Customization
+            applyCustomization.addEventListener('click', () => {
+                const zipCode = zipCodeInput.value;
+                const pickupTime = pickupTimeInput.value;
+                
+                if (!zipCode || !pickupTime) {
+                    showNotification('Please fill in both zip code and pickup time', true);
+                    return;
+                }
+                
+                let customizedContent = currentTemplate.content
+                    .replace(/{zipcode}/g, zipCode)
+                    .replace(/{time}/g, pickupTime);
+                
+                copyToClipboard(customizedContent);
+                closeModals();
+            });
+            
+            // Add template button
+            addTemplateBtn.addEventListener('click', () => {
+                openEditTemplateModal();
+            });
+            
+            // Save template form
+            templateForm.addEventListener('submit', saveTemplate);
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (event) => {
+                if (event.target === templateModal) closeModals();
+                if (event.target === licenseModal) closeModals();
+                if (event.target === customizationModal) closeModals();
+                if (event.target === editTemplateModal) closeModals();
+            });
+        }
+
+        // ===== RENTERS DASHBOARD FUNCTIONALITY =====
+        // DOM elements for Renters Dashboard
+        const fileInput = document.getElementById('fileInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const tableBody = document.getElementById('tableBody');
+        const hideNegativeCheckbox = document.getElementById('hideNegative');
+        const sortOrderSelect = document.getElementById('sortOrder');
+        const searchInputRenters = document.getElementById('searchInputRenters');
+        const tableHeaders = document.querySelectorAll('th[data-sort]');
+        
+        // Notes section elements
+        const notesSection = document.getElementById('notesSection');
+        const currentRenterName = document.getElementById('currentRenterName');
+        const closeNotesBtn = document.getElementById('closeNotes');
+        const saveNoteBtn = document.getElementById('saveNote');
+        const customerNotes = document.getElementById('customerNotes');
+        const startRecordingBtn = document.getElementById('startRecording');
+        const voiceStatus = document.getElementById('voiceStatus');
+        const notesHistory = document.getElementById('notesHistory');
+        const noteTitleInput = document.getElementById('noteTitle');
+        
+        let allData = [];
+        let currentSort = {
+            column: 'due',
+            direction: 'desc'
+        };
+        
+        let recognition = null;
+        let isRecording = false;
+        let currentRenter = null;
+        let rentersNotes = {};
+        
+        // Initialize the Renters Dashboard
+        function initRentersDashboard() {
+            initializeSpeechRecognition();
+            loadSavedNotes();
+            setupRentersEventListeners();
+        }
+        
+        // Initialize speech recognition if available
+        function initializeSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+                
+                recognition.onresult = function(event) {
+                    let interimTranscript = '';
+                    let finalTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript;
+                        } else {
+                            interimTranscript += transcript;
+                        }
+                    }
+                    
+                    // Append the recognized text to the notes field
+                    customerNotes.value += finalTranscript;
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event.error);
+                    voiceStatus.textContent = 'Error: ' + event.error;
+                    isRecording = false;
+                    updateRecordingButton();
+                };
+                
+                recognition.onend = function() {
+                    if (isRecording) {
+                        // If we're still supposed to be recording, restart
+                        recognition.start();
+                    } else {
+                        voiceStatus.textContent = 'Ready';
+                        updateRecordingButton();
+                    }
+                };
+            } else {
+                startRecordingBtn.disabled = true;
+                voiceStatus.textContent = 'Speech recognition not supported';
+            }
+        }
+        
+        // Process uploaded Excel file
+        uploadBtn.addEventListener('click', function() {
+            if (!fileInput.files.length) {
+                alert('Please select an Excel file first.');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Assuming the data is in the first sheet
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // Convert to JSON
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    // Process the data
+                    processData(jsonData);
+                } catch (error) {
+                    console.error('Error processing file:', error);
+                    alert('Error processing the Excel file. Please make sure it is a valid Excel file.');
+                }
+            };
+            
+            reader.onerror = function() {
+                alert('Error reading the file.');
+            };
+            
+            reader.readAsArrayBuffer(file);
+        });
+        
+        // Process the extracted data
+        function processData(data) {
+            allData = [];
+            
+            data.forEach(row => {
+                // Check if renter status is Active (case-insensitive)
+                if (row['Renter Status'] && row['Renter Status'].toLowerCase() === 'active') {
+                    const renterName = row['Renter Name'] || 'N/A';
+                    
+                    // Initialize notes for this renter if not exists
+                    if (renterName !== 'N/A' && !rentersNotes[renterName]) {
+                        rentersNotes[renterName] = [];
+                    }
+                    
+                    allData.push({
+                        year: row.Year || 'N/A',
+                        make: row.Make || 'N/A',
+                        model: row.Model || 'N/A',
+                        plate: row['Plate Number'] || 'N/A',
+                        insurance: row['Insurance Company'] || 'N/A',
+                        expiry: row['Insurance Expiry'] || 'N/A',
+                        renter: renterName,
+                        due: parseFloat(row['Due Today']) || 0,
+                        uber: parseFloat(row['Uber Earnings']) || 0
+                    });
+                }
+            });
+            
+            // Apply initial sorting and render
+            applySorting();
+            renderTable();
+        }
+        
+        // Render the table with current data and filters
+        function renderTable() {
+            let filteredData = [...allData];
+            
+            // Apply search filter
+            const searchTerm = searchInputRenters.value.toLowerCase();
+            if (searchTerm) {
+                filteredData = filteredData.filter(item => 
+                    Object.values(item).some(value => 
+                        String(value).toLowerCase().includes(searchTerm)
+                    )
+                );
+            }
+            
+            // Apply negative value filter
+            if (hideNegativeCheckbox.checked) {
+                filteredData = filteredData.filter(item => item.due >= 0);
+            }
+            
+            // Clear table
+            tableBody.innerHTML = '';
+            
+            // Populate table or show no results message
+            if (filteredData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="10" class="no-data">No matching records found</td></tr>';
+                return;
+            }
+            
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Format due amount with color coding
+                const dueClass = item.due >= 0 ? 'positive-due' : 'negative-due';
+                const dueFormatted = typeof item.due === 'number' ? item.due.toFixed(2) : item.due;
+                
+                // Check if this renter has notes
+                const hasNotes = rentersNotes[item.renter] && rentersNotes[item.renter].length > 0;
+                const notesIndicator = hasNotes ? '📝' : '';
+                
+                row.innerHTML = `
+                    <td>${item.year}</td>
+                    <td>${item.make}</td>
+                    <td>${item.model}</td>
+                    <td>${item.plate}</td>
+                    <td>${item.insurance}</td>
+                    <td>${item.expiry}</td>
+                    <td>${item.renter} ${notesIndicator}</td>
+                    <td class="${dueClass}">$${dueFormatted}</td>
+                    <td>$${item.uber.toFixed(2)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-sm view-notes" data-renter="${item.renter}">Notes</button>
+                        </div>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Add event listeners to note buttons
+            document.querySelectorAll('.view-notes').forEach(button => {
+                button.addEventListener('click', function() {
+                    const renterName = this.getAttribute('data-renter');
+                    showNotesSection(renterName);
+                });
+            });
+        }
+        
+        // Apply sorting based on current settings
+        function applySorting() {
+            const sortColumn = currentSort.column;
+            const sortDirection = currentSort.direction;
+            
+            allData.sort((a, b) => {
+                let valueA = a[sortColumn];
+                let valueB = b[sortColumn];
+                
+                // Handle numeric sorting for due and uber columns
+                if (sortColumn === 'due' || sortColumn === 'uber') {
+                    valueA = parseFloat(valueA) || 0;
+                    valueB = parseFloat(valueB) || 0;
+                }
+                
+                if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
+                if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+            
+            // Update header classes to show current sort
+            tableHeaders.forEach(header => {
+                header.classList.remove('asc', 'desc');
+                if (header.getAttribute('data-sort') === sortColumn) {
+                    header.classList.add(sortDirection);
+                }
+            });
+        }
+        
+        // Show notes section for a specific renter
+        function showNotesSection(renterName) {
+            currentRenter = renterName;
+            currentRenterName.textContent = renterName;
+            customerNotes.value = '';
+            noteTitleInput.value = '';
+            
+            // Load existing notes for this renter
+            loadRenterNotes(renterName);
+            
+            // Show the notes section
+            notesSection.style.display = 'block';
+            
+            // Scroll to notes section
+            notesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Load notes for a specific renter
+        function loadRenterNotes(renterName) {
+            const notes = rentersNotes[renterName] || [];
+            const notesContainer = notesHistory;
+            
+            // Clear previous notes
+            notesContainer.innerHTML = '<h3>Notes History</h3>';
+            
+            if (notes.length === 0) {
+                notesContainer.innerHTML += '<div class="no-data">No notes yet</div>';
+                return;
+            }
+            
+            // Display notes in reverse chronological order (newest first)
+            notes.slice().reverse().forEach(note => {
+                const noteElement = document.createElement('div');
+                noteElement.className = 'note-entry';
+                
+                const date = new Date(note.timestamp);
+                noteElement.innerHTML = `
+                    <div class="note-date">${date.toLocaleString()}</div>
+                    <div><strong>${note.title || 'Untitled'}</strong></div>
+                    <div>${note.content}</div>
+                `;
+                
+                notesContainer.appendChild(noteElement);
+            });
+        }
+        
+        // Save note for current renter
+        function saveNote() {
+            if (!currentRenter) return;
+            
+            const noteContent = customerNotes.value.trim();
+            const title = noteTitleInput.value.trim() || 'Untitled';
+            
+            if (!noteContent) {
+                alert('Note cannot be empty');
+                return;
+            }
+            
+            // Initialize notes array if it doesn't exist
+            if (!rentersNotes[currentRenter]) {
+                rentersNotes[currentRenter] = [];
+            }
+            
+            // Add new note
+            rentersNotes[currentRenter].push({
+                title: title,
+                content: noteContent,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Save to storage
+            saveNotesToStorage();
+            
+            // Reload notes display
+            loadRenterNotes(currentRenter);
+            
+            // Clear input fields
+            customerNotes.value = '';
+            noteTitleInput.value = '';
+            
+            // Update the main table to show note indicator
+            renderTable();
+            
+            alert('Note saved successfully!');
+        }
+        
+        // Save notes to storage
+        function saveNotesToStorage() {
+            localStorage.setItem('rentersNotes', JSON.stringify(rentersNotes));
+        }
+        
+        // Load saved notes from storage
+        function loadSavedNotes() {
+            const savedNotes = localStorage.getItem('rentersNotes');
+            if (savedNotes) {
+                rentersNotes = JSON.parse(savedNotes);
+            }
+        }
+        
+        // Toggle voice recording
+        function toggleRecording() {
+            if (!recognition) return;
+            
+            if (!isRecording) {
+                recognition.start();
+                isRecording = true;
+                voiceStatus.textContent = 'Recording...';
+                voiceStatus.classList.add('recording');
+                updateRecordingButton();
+            } else {
+                recognition.stop();
+                isRecording = false;
+                voiceStatus.textContent = 'Ready';
+                voiceStatus.classList.remove('recording');
+                updateRecordingButton();
+            }
+        }
+        
+        // Update recording button state
+        function updateRecordingButton() {
+            if (isRecording) {
+                startRecordingBtn.textContent = 'Stop Recording';
+                startRecordingBtn.classList.add('btn-danger');
+            } else {
+                startRecordingBtn.textContent = 'Start Voice Recording';
+                startRecordingBtn.classList.remove('btn-danger');
+            }
+        }
+        
+        // Setup event listeners for Renters Dashboard
+        function setupRentersEventListeners() {
+            // Filters and sorting
+            hideNegativeCheckbox.addEventListener('change', renderTable);
+            sortOrderSelect.addEventListener('change', function() {
+                currentSort.direction = this.value;
+                applySorting();
+                renderTable();
+            });
+            
+            searchInputRenters.addEventListener('input', debounce(renderTable, 300));
+            
+            // Add sorting when clicking on headers
+            tableHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const column = this.getAttribute('data-sort');
+                    
+                    // If clicking the same column, toggle direction
+                    if (currentSort.column === column) {
+                        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        // New column, default to ascending
+                        currentSort.column = column;
+                        currentSort.direction = 'asc';
+                    }
+                    
+                    applySorting();
+                    renderTable();
+                });
+            });
+            
+            // Notes section event listeners
+            closeNotesBtn.addEventListener('click', function() {
+                notesSection.style.display = 'none';
+            });
+            
+            saveNoteBtn.addEventListener('click', saveNote);
+            
+            startRecordingBtn.addEventListener('click', toggleRecording);
+        }
+        
+        // ===== PAYMENT MANAGER FUNCTIONALITY =====
+        // DOM elements for Payment Manager
+        const savePaymentBtn = document.getElementById('savePayment');
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const output = document.getElementById('output');
+        const toggleMiles = document.getElementById('toggleMiles');
+        const toggleTolls = document.getElementById('toggleTolls');
+        
+        // Initialize the Payment Manager
+        function initPaymentManager() {
+            loadPaymentData();
+            setupPaymentEventListeners();
+        }
+        
+        // Load saved payment data
+        function loadPaymentData() {
+            const keys = [
+                'zelle',
+                'venmoPersonal',
+                'venmoBusiness',
+                'paypal',
+                'cashapp',
+                'uberDate',
+                'milesDrivenDate',
+                'dailyDate',
+                'includeMiles',
+                'includeTolls'
+            ];
+            
+            keys.forEach(key => {
+                const value = localStorage.getItem(key);
+                if (value !== null) {
+                    if (key === 'includeMiles') {
+                        toggleMiles.checked = value === 'true';
+                    } else if (key === 'includeTolls') {
+                        toggleTolls.checked = value === 'true';
+                    } else {
+                        const el = document.getElementById(key);
+                        if (el) el.value = value;
+                    }
+                }
+            });
+        }
+        
+        // Save payment data
+        function savePaymentData() {
+            const keys = [
+                'zelle',
+                'venmoPersonal',
+                'venmoBusiness',
+                'paypal',
+                'cashapp',
+                'uberDate',
+                'milesDrivenDate',
+                'dailyDate',
+                'includeMiles',
+                'includeTolls'
+            ];
+            
+            keys.forEach(key => {
+                let value;
+                if (key === 'includeMiles') {
+                    value = toggleMiles.checked;
+                } else if (key === 'includeTolls') {
+                    value = toggleTolls.checked;
+                } else {
+                    const el = document.getElementById(key);
+                    value = el ? el.value : '';
+                }
+                localStorage.setItem(key, value);
+            });
+            
+            alert('Payment details saved.');
+        }
+        
+        // Generate message
+        function generateMessage() {
+            const inputs = {
+                previousOutstanding: document.getElementById('previousOutstanding').value,
+                uberDate: document.getElementById('uberDate').value,
+                uberEarnings: document.getElementById('uberEarnings').value,
+                milesDrivenDate: document.getElementById('milesDrivenDate').value,
+                milesDriven: document.getElementById('milesDriven').value,
+                dailyDate: document.getElementById('dailyDate').value,
+                dailyRental: document.getElementById('dailyRental').value,
+                tolls: document.getElementById('tolls').value,
+            };
+            
+            const previousOutstanding = parseFloat(inputs.previousOutstanding) || 0;
+            const uberEarnings = parseFloat(inputs.uberEarnings) || 0;
+            const dailyRental = parseFloat(inputs.dailyRental) || 0;
+            const tollsRaw = parseFloat(inputs.tolls) || 0;
+            
+            const zelle = localStorage.getItem('zelle') || "";
+            const venmoBusiness = localStorage.getItem('venmoBusiness') || "";
+            const paypal = localStorage.getItem('paypal') || "";
+            const cashapp = localStorage.getItem('cashapp') || "";
+            const uberDate = localStorage.getItem('uberDate') || "";
+            const milesDrivenDate = localStorage.getItem('milesDrivenDate') || "";
+            const dailyDate = localStorage.getItem('dailyDate') || "";
+            const includeMiles = localStorage.getItem('includeMiles') === 'true';
+            const includeTolls = localStorage.getItem('includeTolls') === 'true';
+            
+            const tolls = includeTolls ? tollsRaw : 0;
+            const rawDiff = previousOutstanding + tolls - uberEarnings + dailyRental;
+            const earningsDiff = Math.abs(rawDiff).toFixed(2);
+            
+            let lines = [];
+            
+            lines.push(`Previous Outstanding $${previousOutstanding.toFixed(2)}`);
+            if (includeTolls) lines.push(`${uberDate} Tolls $${tollsRaw.toFixed(2)}`);
+            lines.push(`${uberDate} Uber Earnings $${uberEarnings.toFixed(2)}`);
+            if (includeMiles) lines.push(`${milesDrivenDate} Miles Driven ${inputs.milesDriven || 'N/A'}`);
+            lines.push(`${dailyDate} Daily Rental $${dailyRental.toFixed(2)}`);
+            
+            let balanceLine = '';
+            if (rawDiff > 0) {
+                if (includeTolls) {
+                    balanceLine = `${dailyDate} Outstanding = ${previousOutstanding.toFixed(2)} + ${tolls.toFixed(2)} - ${uberEarnings.toFixed(2)} + ${dailyRental.toFixed(2)} = $${earningsDiff}`;
+                } else {
+                    balanceLine = `${dailyDate} Outstanding = ${previousOutstanding.toFixed(2)} - ${uberEarnings.toFixed(2)} + ${dailyRental.toFixed(2)} = $${earningsDiff}`;
+                }
+            } else {
+                if (includeTolls) {
+                    balanceLine = `${dailyDate} Balance earnings $${uberEarnings.toFixed(2)} - $${tolls.toFixed(2)} - $${dailyRental.toFixed(2)} = $${earningsDiff}`;
+                } else {
+                    balanceLine = `${dailyDate} Balance earnings $${uberEarnings.toFixed(2)} - $${dailyRental.toFixed(2)} = $${earningsDiff}`;
+                }
+            }
+            
+            lines.push(balanceLine);
+            lines.push('');
+            
+            if (rawDiff > 0) {
+                lines.push(`Pls Pay $${earningsDiff} outstanding as of ${dailyDate}`);
+                lines.push('');
+                lines.push(`Please make the outstanding's payments amount, thru any of the following:`);
+                if (zelle) lines.push(`* Zell: ${zelle}`);
+                if (cashapp) lines.push(`* Cash App ID: ${cashapp}`);
+                if (venmoBusiness) lines.push(`* Venmo (Business): ${venmoBusiness}`);
+                if (paypal) lines.push(`* PayPal: ${paypal}`);
+                lines.push('');
+                lines.push(`Screenshot once payment is made. Thank you!`);
+            } else {
+                lines.push(`The balance will be sent to you by before 2 PM.`);
+            }
+            
+            output.value = lines.join('\n');
+        }
+        
+        // Copy to clipboard
+        function copyToClipboardPayment() {
+            const text = output.value;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Message copied to clipboard!');
+            });
+        }
+        
+        // Setup event listeners for Payment Manager
+        function setupPaymentEventListeners() {
+            savePaymentBtn.addEventListener('click', savePaymentData);
+            generateBtn.addEventListener('click', generateMessage);
+            copyBtn.addEventListener('click', copyToClipboardPayment);
+            
+            toggleMiles.addEventListener('change', function() {
+                localStorage.setItem('includeMiles', this.checked);
+            });
+            
+            toggleTolls.addEventListener('change', function() {
+                localStorage.setItem('includeTolls', this.checked);
+            });
+        }
+        
+        // ===== UTILITY FUNCTIONS =====
+        // Utility function to debounce rapid events
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), wait);
+            };
+        }
+        
+        // ===== INITIALIZE ALL PAGES =====
+        // Initialize all pages when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initTemplateManager();
+            initRentersDashboard();
+            initPaymentManager();
+        });
+    </script>
+</body>
+</html>
