@@ -1028,39 +1028,49 @@
 
         // Default templates
         const defaultTemplates = [
-            {
-                id: '1',
-                title: "Discount details",
-                content: "The discount is automatically applied when you book the next reservation. When you are about to checkout you can see the cost breakdown with the additional discount. Let me know if you still face any issues getting the discount."
-            },
-            {
-                id: '2',
-                title: "How do I get the Keys",
-                content: "The keys are in the glovebox. Unlock using turo go or let me know I will remote unlock it."
-            },
-            {
-                id: '3',
-                title: "Pickup car rental DFW",
-                content: "We hope your rental experience with us has been thoroughly enjoyable!\n\nAs a reminder, your vehicle drop-off will be at the same location you picked up the car from. If you are unsure of the address please let us know.\n\nIf you picked up the car from turo parking lot in DFW please drop off the car at the same turo parking lot (it's next to remote south parking 2400 S Airfield Dr Euless, TX 75038. Once you reach the address continue driving ahead for a few feet till you find the turo parking lot).\n\nUpon arrival and parking, here's a succinct guide to ensure a smooth handoff:\n\nFor Non-Turo Go Users: After parking, make sure to collect all your belongings. Place the lockbox on the window with the lock facing outward, roll the windows up, and securely lock the car. Place the keys inside the lockbox and turn the knob to ensure it's locked. Confirm that the lockbox is securely locked. Capture a photo of the parking spot and send it to us.\n\nFuel Policy: Please refuel the car to the same level as it was at the start of your rental.\n\nLate Returns: If you anticipate a delay in your return, kindly extend your rental through the app to update your drop-off time accordingly. This will help you avoid any late fees.\n\nThank you for choosing us for your journey. We look forward to welcoming you back soon!"
-            },
-            {
-                id: '4',
-                title: "check out car rental ZAM ZAM",
-                content: "We hope your rental experience with us has been thoroughly enjoyable!\n\nAs a reminder, your vehicle drop-off will be at the 3901 West Northgate Drive, Irving, TX 75062. Upon arrival and parking, here's a succinct guide to ensure a smooth handoff:\n\nFor Non-Turo Go Users: After parking, make sure to collect all your belongings. Place the lockbox on the window with the lock facing outward, roll the windows up, and securely lock the car. Place the keys inside the lockbox and turn the knob to ensure it's locked. Confirm that the lockbox is securely locked. Capture a photo of the parking spot and send it to us.\n\nFuel Policy: Please refuel the car to the same level as it was at the start of your rental.\n\nLate Returns: If you anticipate a delay in your return, kindly extend your rental through the app to update your drop-off time accordingly. This will help you avoid any late fees.\n\nThank you for choosing us for your journey. We look forward to welcoming you back soon!"
-            },
-            {
-                id: '5',
-                title: "check in car rental houstan",
-                content: "Thank you for selecting our service for your travel needs! We're thrilled to be part of your journey and are committed to ensuring a seamless and enjoyable experience. Below, you'll find important information to help you prepare for your trip:\n\nPre-Trip Checklist\n- Document Upload: Please upload a photo of your driver's license and a selfie to Turo at least 24 hours before your trip begins. Instructions for this process were sent to your email by Turo. If you encounter any issues, refer to that email for guidance.\n\nArrival Information\n- Vehicle Readiness: We aim to have your vehicle ready 15 minutes before your scheduled pick-up time. However, we cannot guarantee availability before then, so please verify your pick-up time before arriving.\n\nVehicle Pickup Details\n-Location: Your vehicle will be available for pickup at 3390 FM 1960 Rd, Humble, TX 77338. This is the parking lot located directly behind La Cabana - Mexican Restaurant. We share the entrance with the restaurant, but our parking area is further down at the back of the lot.\n\nHere is the store manager number +1 (832) 779-0678 Please reach out to this number for any queries.\n\nProximity to Airport: We are conveniently located near George Bush Intercontinental Airport (IAH). Please note that due to Turo's updated policies, we are unable to offer pick-ups or drop-offs directly at the airport terminals. You will need to arrange a short ride (e.g., Uber or Lyft) from the airport to our location.\n\nAccess Instructions: Approximately 15 minutes before your scheduled pick-up time, we will send you a picture of the parking spot and the lockbox code to access the keys. If your rental uses Turo Go, you can ignore the lockbox code and access the car directly through the app.\n\nTolls\n- The vehicle is equipped with a toll sticker for your convenience. Any tolls incurred during your trip will be billed to you afterward.\n\nExtension Policy\n- If your plans change and you'd like to extend your trip, please let us know as soon as possible. If the vehicle is available, we'll be happy to reserve it exclusively for you, ensuring no other bookings take precedence. Your convenience is our priority!\n\nPolicies & FAQs\n- No Smoking: Smoking is strictly prohibited in the vehicle.\n- Additional Information: For details on drop-offs, refueling, tolls, and other frequently asked questions, please refer to our FAQ section.\n\nWe're truly grateful you've chosen to travel with us and look forward to providing you with an exceptional experience. Safe travels, and don't hesitate to reach out if you have any questions!",
-                needsLicenseCheck: true
-            },
-            {
-                id: '6',
-                title: "check in car rental ZAM ZAM",
-                content: "Thank you for selecting our service for your travel needs! We're thrilled to be part of your journey and are committed to ensuring a seamless and enjoyable experience.\n\nVehicle Pickup Details: The vehicle can be collected from 3901 West Northgate Drive, Irving, {zipcode}, which is conveniently located near DFW airport. Please note, due to Turo's updated policies, we're unable to offer pick-ups or drop-offs directly at DFW airport terminals. You will need to arrange a short Uber ride from the airport to our location. To access the car, we will provide you with a picture of the parking spot and the code to the lockbox 15 minutes prior to your pickup time {time}. If your rental uses Turo Go, you can ignore the lockbox code and access the car directly through the app.",
-                needsCustomization: true
-            }
-        ];
+    {
+        id: '1',
+        title: "Discount details",
+        content: "The discount is automatically applied when you book the next reservation. When you are about to checkout you can see the cost breakdown with the additional discount. Let me know if you still face any issues getting the discount."
+    },
+    {
+        id: '2',
+        title: "How do I get the Keys",
+        content: "The keys are in the glovebox. Unlock using turo go or let me know I will remote unlock it."
+    },
+    {
+        id: '3',
+        title: "Pickup car rental DFW",
+        content: "We hope your rental experience with us has been thoroughly enjoyable!\n\nAs a reminder, your vehicle drop-off will be at the same location you picked up the car from. If you are unsure of the address please let us know.\n\nIf you picked up the car from turo parking lot in DFW please drop off the car at the same turo parking lot (it's next to remote south parking 2400 S Airfield Dr Euless, TX 75038. Once you reach the address continue driving ahead for a few feet till you find the turo parking lot).\n\nUpon arrival and parking, here's a succinct guide to ensure a smooth handoff:\n\nFor Non-Turo Go Users: After parking, make sure to collect all your belongings. Place the lockbox on the window with the lock facing outward, roll the windows up, and securely lock the car. Place the keys inside the lockbox and turn the knob to ensure it's locked. Confirm that the lockbox is securely locked. Capture a photo of the parking spot and send it to us.\n\nFuel Policy: Please refuel the car to the same level as it was at the start of your rental.\n\nLate Returns: If you anticipate a delay in your return, kindly extend your rental through the app to update your drop-off time accordingly. This will help you avoid any late fees.\n\nThank you for choosing us for your journey. We look forward to welcoming you back soon!"
+    },
+    {
+        id: '4',
+        title: "check out car rental ZAM ZAM",
+        content: "We hope your rental experience with us has been thoroughly enjoyable!\n\nAs a reminder, your vehicle drop-off will be at the 3901 West Northgate Drive, Irving, TX 75062. Upon arrival and parking, here's a succinct guide to ensure a smooth handoff:\n\nFor Non-Turo Go Users: After parking, make sure to collect all your belongings. Place the lockbox on the window with the lock facing outward, roll the windows up, and securely lock the car. Place the keys inside the lockbox and turn the knob to ensure it's locked. Confirm that the lockbox is securely locked. Capture a photo of the parking spot and send it to us.\n\nFuel Policy: Please refuel the car to the same level as it was at the start of your rental.\n\nLate Returns: If you anticipate a delay in your return, kindly extend your rental through the app to update your drop-off time accordingly. This will help you avoid any late fees.\n\nThank you for choosing us for your journey. We look forward to welcoming you back soon!"
+    },
+    {
+        id: '5',
+        title: "check in car rental houstan",
+        content: "Thank you for selecting our service for your travel needs! We're thrilled to be part of your journey and are committed to ensuring a seamless and enjoyable experience. Below, you'll find important information to help you prepare for your trip:\n\nPre-Trip Checklist\n- Document Upload: Please upload a photo of your driver's license and a selfie to Turo at least 24 hours before your trip begins. Instructions for this process were sent to your email by Turo. If you encounter any issues, refer to that email for guidance.\n\nArrival Information\n- Vehicle Readiness: We aim to have your vehicle ready 15 minutes before your scheduled pick-up time. However, we cannot guarantee availability before then, so please verify your pick-up time before arriving.\n\nVehicle Pickup Details\n-Location: Your vehicle will be available for pickup at 3390 FM 1960 Rd, Humble, TX 77338. This is the parking lot located directly behind La Cabana - Mexican Restaurant. We share the entrance with the restaurant, but our parking area is further down at the back of the lot.\n\nHere is the store manager number +1 (832) 779-0678 Please reach out to this number for any queries.\n\nProximity to Airport: We are conveniently located near George Bush Intercontinental Airport (IAH). Please note that due to Turo's updated policies, we are unable to offer pick-ups or drop-offs directly at the airport terminals. You will need to arrange a short ride (e.g., Uber or Lyft) from the airport to our location.\n\nAccess Instructions: Approximately 15 minutes before your scheduled pick-up time, we will send you a picture of the parking spot and the lockbox code to access the keys. If your rental uses Turo Go, you can ignore the lockbox code and access the car directly through the app.\n\nTolls\n- The vehicle is equipped with a toll sticker for your convenience. Any tolls incurred during your trip will be billed to you afterward.\n\nExtension Policy\n- If your plans change and you'd like to extend your trip, please let us know as soon as possible. If the vehicle is available, we'll be happy to reserve it exclusively for you, ensuring no other bookings take precedence. Your convenience is our priority!\n\nPolicies & FAQs\n- No Smoking: Smoking is strictly prohibited in the vehicle.\n- Additional Information: For details on drop-offs, refueling, tolls, and other frequently asked questions, please refer to our FAQ section.\n\nWe're truly grateful you've chosen to travel with us and look forward to providing you with an exceptional experience. Safe travels, and don't hesitate to reach out if you have any questions!",
+        needsLicenseCheck: true
+    },
+    {
+        id: '6',
+        title: "check in car rental ZAM ZAM",
+        content: "Thank you for selecting our service for your travel needs! We're thrilled to be part of your journey and are committed to ensuring a seamless and enjoyable experience.\n\nVehicle Pickup Details: The vehicle can be collected from 3901 West Northgate Drive, Irving, {zipcode}, which is conveniently located near DFW airport. Please note, due to Turo's updated policies, we're unable to offer pick-ups or drop-offs directly at DFW airport terminals. You will need to arrange a short Uber ride from the airport to our location. To access the car, we will provide you with a picture of the parking spot and the code to the lockbox 15 minutes prior to your pickup time {time}. If your rental uses Turo Go, you can ignore the lockbox code and access the car directly through the app.",
+        needsCustomization: true
+    },
+    {
+        id:'7',
+        title: "Immoblize Car template",
+        content: "Centralised team:\nDue to non-payment and your account reaching a higher balance, your rental vehicle has been automatically disabled by our centralized system. Please make an immediate payment to re-enable your car."
+    },
+    {
+        id:'8',
+        title: "maintenance check",
+        content: "Please schedule a maintenance check and oil change with our mechanic at your earliest convenience. If the service is not completed and any issue occurs with the car, repair costs will be your responsibility.\n\nMechanic Shop Details:\nMotorhead Auto\n228 Irby Ln, Irving, TX 75061\n\nContact Person:\nMr. Aufar\n📞 214-228-9087\n\nOnce the maintenance is completed, kindly send a photo of:\n✅ The odometer\n✅ The new oil change sticker placed on the windshield\n\nThank you for your cooperation!"
+    }
+];
 
         // DOM elements for Template Manager
         const templatesContainer = document.getElementById('templatesContainer');
